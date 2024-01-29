@@ -1,0 +1,12 @@
+FROM jenkins/inbound-agent:latest-bookworm-jdk17
+USER root
+RUN apt-get update && apt-get install -y git 
+RUN apt install build-essential -y
+RUN apt install curl -y 
+RUN apt install coreutils -y
+RUN curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pack-v0.32.1-linux.tgz" | tar -C /usr/local/bin/ --no-same-owner -xzv pack
+
+# Switch back to jenkins user
+USER jenkins
+
+ENTRYPOINT ["/usr/local/bin/jenkins-agent"]

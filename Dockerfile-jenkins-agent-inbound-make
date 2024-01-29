@@ -1,0 +1,29 @@
+FROM jenkins/inbound-agent:latest-bookworm-jdk17
+USER root
+
+#ENV GOLANG_VERSION 1.21.6
+#ENV GOPATH /go
+ENV PATH=$PATH:/usr/local/go/bin
+ENV PATH=$PATH:/usr/local/solar-scanner-cli/bin
+
+RUN apt-get update && apt-get install git sudo unzip -y
+RUN apt-get install apt-transport-https ca-certificates curl wget -y 
+RUN apt install build-essential -y
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+RUN install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+RUN kubectl version --client
+RUN curl -LO https://go.dev/dl/go1.21.6.linux-amd64.tar.gz
+RUN tar -C /usr/local -xzf go1.21.6.linux-amd64.tar.gz
+RUN rm go1.21.6.linux-amd64.tar.gz
+RUN curl -LO "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip"
+RUN unzip sonar-scanner-cli-5.0.1.3006-linux.zip
+RUN mkdir /usr/local/sonar-scanner-cli
+RUN pwd && ls -alh && ls /usr/local/ 
+#RUN mv sonar-scanner-cli-5.0.1.3006-linux /usr/local/sonar-scanner-cli/
+#RUN rm sonar-scanner-cli-5.0.1.3006-linux.zip
+
+
+# Switch back to jenkins user
+USER jenkins
+
+ENTRYPOINT ["/usr/local/bin/jenkins-agent"]

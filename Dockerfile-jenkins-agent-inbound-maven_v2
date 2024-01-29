@@ -1,0 +1,24 @@
+# Use Maven image to have access to Maven
+FROM maven:latest as maven_image
+
+# Final image
+FROM jenkins/inbound-agent:latest-bookworm-jdk17
+USER root
+RUN apt-get update && apt-get install -y git 
+RUN apt-get update && apt-get install -y default-jdk
+
+# Copy Maven from Maven image
+COPY --from=maven_image /usr/share/maven /usr/share/maven
+
+# Add the MAVEN_HOME environment variable
+# ENV MAVEN_HOME /usr/share/maven
+
+# Add Maven to the PATH
+ENV maven=/usr/share/maven/bin
+ENV PATH=${maven}:${PATH}
+
+RUN mvn -v
+
+USER jenkins
+
+ENTRYPOINT ["/usr/local/bin/jenkins-agent"]
