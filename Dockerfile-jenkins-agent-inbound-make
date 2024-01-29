@@ -18,7 +18,7 @@ RUN rm go1.21.6.linux-amd64.tar.gz
 RUN curl -LO "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip"
 RUN unzip sonar-scanner-cli-5.0.1.3006-linux.zip
 RUN mkdir /usr/local/sonar-scanner-cli
-RUN pwd && ls -alh && ls /usr/local/ 
+RUN ls -alh 
 #RUN mv sonar-scanner-cli-5.0.1.3006-linux /usr/local/sonar-scanner-cli/
 #RUN rm sonar-scanner-cli-5.0.1.3006-linux.zip
 
